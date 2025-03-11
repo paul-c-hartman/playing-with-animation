@@ -1,21 +1,18 @@
 #include <SFML/Graphics.hpp>
+#include "events.hpp"
+#include "configuration.hpp"
 
 int main()
 {
-    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "Playing with animation");
-    window.setFramerateLimit(144);
+  auto window_state = conf::fullscreen ? sf::State::Fullscreen : sf::State::Windowed;
+  auto window = sf::RenderWindow(sf::VideoMode({conf::window_size.x, conf::window_size.y}), "Playing with animation", window_state);
+  window.setFramerateLimit(conf::max_framerate);
 
-    while (window.isOpen())
-    {
-        while (const std::optional event = window.pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-            {
-                window.close();
-            }
-        }
+  while (window.isOpen())
+  {
+    processEvents(window);
 
-        window.clear();
-        window.display();
-    }
+    window.clear();
+    window.display();
+  }
 }
